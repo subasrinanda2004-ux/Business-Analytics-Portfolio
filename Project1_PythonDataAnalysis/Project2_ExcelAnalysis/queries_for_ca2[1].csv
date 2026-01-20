@@ -1,0 +1,69 @@
+name,description,query,id,parentId,isFolder
+queries for ca2,,"MATCH (c:Customer)-[:PURCHASED]->(p1:Product {productId: 'P1'})
+MATCH (c)-[:PURCHASED]->(next:Product)
+WHERE next.productId <> 'P1'
+RETURN next.productId AS nextProduct,
+       COUNT(*) AS timesPurchased
+ORDER BY timesPurchased DESC;
+
+
+MATCH (c1:Customer {customerId:'C1'})-[:PURCHASED]->(p:Product)
+MATCH (other:Customer)-[:PURCHASED]->(p)
+WHERE other.customerId <> 'C1'
+MATCH (other)-[:PURCHASED]->(extra:Product)
+WHERE NOT (c1)-[:PURCHASED]->(extra)
+RETURN extra.productId AS recommendedProduct,
+       COUNT(*) AS frequency
+ORDER BY frequency DESC;
+
+
+MATCH (c:Customer)-[:ABANDONED]->(p:Product {productId:'P3'})
+MATCH (c)-[:PURCHASED]->(alt:Product)
+WHERE alt.productId <> 'P3'
+RETURN c.customerId AS customer,
+       alt.productId AS purchasedInstead,
+       alt.purchasedAt AS purchaseTime
+ORDER BY purchaseTime;
+
+MATCH (c:Customer)-[p1:PURCHASED]->(prod1:Product)
+MATCH (c)-[p2:PURCHASED]->(prod2:Product)
+WHERE prod1.productId < prod2.productId AND p1.orderId = p2.orderId
+
+
+WITH prod1.productId AS productA,
+     prod2.productId AS productB,
+     COUNT(*) AS timesBoughtTogether
+
+
+WHERE timesBoughtTogether > 1
+
+
+RETURN productA, productB, timesBoughtTogether
+ORDER BY timesBoughtTogether DESC;
+
+
+MATCH (c:Customer)-[v:VIEWED]->(p:Product)
+WITH c, p, COUNT(v) AS viewCount
+MATCH (c)-[:ADDED_TO_CART]->(p)
+WHERE viewCount > 3
+RETURN c.customerId AS customer,
+       p.productId AS product,
+       viewCount
+ORDER BY viewCount DESC;
+
+
+MATCH (c:Customer)-[v:VIEWED]->(p:Product)
+MATCH (c)-[pu:PURCHASED]->(p)
+WITH c, p, v.viewedAt AS viewedAt, pu.purchasedAt AS purchasedAt
+WHERE duration.between(viewedAt, purchasedAt).minutes < 10
+RETURN c.customerId AS customer,
+       p.productId AS product,
+       viewedAt,
+       purchasedAt,
+       duration.between(viewedAt, purchasedAt) AS timeDelta
+ORDER BY timeDelta;
+
+
+
+
+",0,,false

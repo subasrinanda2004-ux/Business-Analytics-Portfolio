@@ -1,0 +1,116 @@
+:guide https://guides.neo4j.com/sandbox/blank-sandbox/index.html
+
+MATCH (n:Customer) RETURN n LIMIT 25;
+
+MATCH p=()-[:ABANDONED]->() RETURN p LIMIT 25;
+
+MATCH (c5:Customer {customerId:'C5'}),
+      (p1:Product {productId:'P1'})
+CREATE (c5)-[:VIEWED {viewedAt:datetime('2025-05-01T10:00')}]->(p1)
+CREATE (c5)-[:VIEWED {viewedAt:datetime('2025-05-02T10:00')}]->(p1)
+CREATE (c5)-[:VIEWED {viewedAt:datetime('2025-05-03T10:00')}]->(p1)
+CREATE (c5)-[:VIEWED {viewedAt:datetime('2025-05-04T10:00')}]->(p1)
+CREATE (c5)-[:ADDED_TO_CART {addedAt:datetime('2025-05-04T10:10'), quantity:1}]->(p1)
+CREATE (c5)-[:PURCHASED {purchasedAt:datetime('2025-05-04T10:20'), quantity:1, amount:100.0, orderId:'O6'}]->(p1);
+
+MATCH (c4:Customer {customerId:'C4'}),
+      (p2:Product {productId:'P2'}),
+      (p5:Product {productId:'P5'})
+CREATE (c4)-[:VIEWED {viewedAt:datetime('2025-03-15T19:00')}]->(p2)
+CREATE (c4)-[:VIEWED {viewedAt:datetime('2025-03-15T19:05')}]->(p5)
+CREATE (c4)-[:PURCHASED {purchasedAt:datetime('2025-03-15T19:10'), quantity:1, amount:50.0, orderId:'O4'}]->(p2)
+CREATE (c4)-[:PURCHASED {purchasedAt:datetime('2025-03-15T19:10'), quantity:1, amount:40.0, orderId:'O4'}]->(p5)
+CREATE (c4)-[:PURCHASED {purchasedAt:datetime('2025-04-15T19:10'), quantity:1, amount:50.0, orderId:'O5'}]->(p2)
+CREATE (c4)-[:PURCHASED {purchasedAt:datetime('2025-04-15T19:10'), quantity:1, amount:40.0, orderId:'O5'}]->(p5)
+CREATE (c4)-[:WISHLISTED {addedAt:datetime('2025-04-16T09:00')}]->(p2);
+
+MATCH (c3:Customer {customerId:'C3'}),
+      (p4:Product {productId:'P4'})
+CREATE (c3)-[:VIEWED {viewedAt:datetime('2025-03-10T08:00')}]->(p4)
+CREATE (c3)-[:PURCHASED {purchasedAt:datetime('2025-03-10T08:03'), quantity:1, amount:60.0, orderId:'O3'}]->(p4);
+
+MATCH (c2:Customer {customerId:'C2'}),
+      (p1:Product {productId:'P1'}),
+      (p2:Product {productId:'P2'}),
+      (p3:Product {productId:'P3'})
+CREATE (c2)-[:VIEWED {viewedAt:datetime('2025-03-05T11:00')}]->(p3)
+CREATE (c2)-[:ADDED_TO_CART {addedAt:datetime('2025-03-05T11:05'), quantity:1}]->(p3)
+CREATE (c2)-[:ABANDONED {abandonedAt:datetime('2025-03-06T09:00')}]->(p3)
+CREATE (c2)-[:VIEWED {viewedAt:datetime('2025-03-06T09:10')}]->(p1)
+CREATE (c2)-[:PURCHASED {purchasedAt:datetime('2025-03-06T09:15'), quantity:1, amount:100.0, orderId:'O2'}]->(p1)
+CREATE (c2)-[:WISHLISTED {addedAt:datetime('2025-03-06T09:20')}]->(p2);
+
+MATCH (c1:Customer {customerId:'C1'}),
+      (p1:Product {productId:'P1'}),
+      (p2:Product {productId:'P2'})
+CREATE (c1)-[:VIEWED {viewedAt:datetime('2025-03-01T10:00')}]->(p1)
+CREATE (c1)-[:VIEWED {viewedAt:datetime('2025-03-01T10:05')}]->(p1)
+CREATE (c1)-[:ADDED_TO_CART {addedAt:datetime('2025-03-01T10:10'), quantity:1}]->(p1)
+CREATE (c1)-[:PURCHASED {purchasedAt:datetime('2025-03-01T10:20'), quantity:1, amount:100.0, orderId:'O1'}]->(p1)
+CREATE (c1)-[:PURCHASED {purchasedAt:datetime('2025-03-01T10:20'), quantity:1, amount:50.0, orderId:'O1'}]->(p2)
+CREATE (c1)-[:WISHLISTED {addedAt:datetime('2025-03-02T09:00')}]->(p2);
+
+// Customers
+CREATE (:Customer {customerId:'C1', name:'Customer1', address:'Dublin',  createdAt:datetime('2025-01-01'), email:'c1@gmail.com'});
+CREATE (:Customer {customerId:'C2', name:'Customer2', address:'Dublin',  createdAt:datetime('2025-01-02'), email:'c2@gmail.com'});
+CREATE (:Customer {customerId:'C3', name:'Customer3', address:'Cork',    createdAt:datetime('2025-01-03'), email:'c3@gmail.com'});
+CREATE (:Customer {customerId:'C4', name:'Customer4', address:'Galway',  createdAt:datetime('2025-01-04'), email:'c4@gmail.com'});
+CREATE (:Customer {customerId:'C5', name:'Customer5', address:'Limerick',createdAt:datetime('2025-01-05'), email:'c5@gmail.com'});
+CREATE (:Customer {customerId:'C6', name:'Customer6', address:'Dublin',  createdAt:datetime('2025-01-06'), email:'c6@gmail.com'});
+CREATE (:Customer {customerId:'C7', name:'Customer7', address:'Dublin',  createdAt:datetime('2025-01-08'), email:'c7@gmail.com'});
+CREATE (:Customer {customerId:'C8', name:'Customer8', address:'Cork',    createdAt:datetime('2025-01-07'), email:'c8@gmail.com'});
+CREATE (:Customer {customerId:'C9', name:'Customer9', address:'Galway',  createdAt:datetime('2025-01-08'), email:'c9@gmail.com'});
+CREATE (:Customer {customerId:'C10', name:'Customer10', address:'Limerick',createdAt:datetime('2025-01-05'), email:'c10@gmail.com'});
+
+// Products
+CREATE (:Product {productId:'P1', name:'Product1', brand:'BrandA', category:'Electronics', price:100.0, createdAt:datetime('2025-02-01'), rating:4.5, quantity:100});
+CREATE (:Product {productId:'P2', name:'Product2', brand:'BrandB', category:'Electronics', price:50.0,  createdAt:datetime('2025-02-02'), rating:4.0, quantity:200});
+CREATE (:Product {productId:'P3', name:'Product3', brand:'BrandC', category:'Home',        price:80.0,  createdAt:datetime('2025-02-03'), rating:4.2, quantity:150});
+CREATE (:Product {productId:'P4', name:'Product4', brand:'BrandD', category:'Sport',       price:60.0,  createdAt:datetime('2025-02-04'), rating:3.9, quantity:120});
+CREATE (:Product {productId:'P5', name:'Product5', brand:'BrandE', category:'Fashion',     price:40.0,  createdAt:datetime('2025-02-05'), rating:4.7, quantity:300});
+CREATE (:Product {productId:'P6', name:'Product6', brand:'BrandA', category:'Electronics', price:106.0, createdAt:datetime('2025-02-01'), rating:4.5, quantity:100});
+CREATE (:Product {productId:'P7', name:'Product7', brand:'BrandB', category:'Electronics', price:70.0,  createdAt:datetime('2025-02-02'), rating:4.0, quantity:200});
+CREATE (:Product {productId:'P8', name:'Product8', brand:'BrandC', category:'Home',        price:70.0,  createdAt:datetime('2025-02-03'), rating:4.2, quantity:150});
+CREATE (:Product {productId:'P9', name:'Product9', brand:'BrandD', category:'Sport',       price:120.0,  createdAt:datetime('2025-02-04'), rating:3.9, quantity:120});
+CREATE (:Product {productId:'P10', name:'Product10', brand:'BrandE', category:'Fashion',     price:200.0,  createdAt:datetime('2025-02-05'), rating:4.7, quantity:300});
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS
+FOR (c:Customer) REQUIRE c.customerId IS UNIQUE;
+
+CREATE CONSTRAINT product_id IF NOT EXISTS
+FOR (p:Product) REQUIRE p.productId IS UNIQUE;
+
+MATCH (n) DETACH DELETE n;
+
+MATCH (n:Customer) RETURN n LIMIT 25;
+
+:guide https://guides.neo4j.com/sandbox/blank-sandbox/index.html
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS 
+FOR (c:Customer) REQUIRE c.customerid is UNIQUE;
+
+CREATE CONSTRAINT product_id IF NOT EXISTS
+FOR (p:Product) REQUIRE p.product_id is UNIQUE;
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS 
+FOR (c:Customer) REQUIRE c.customerid is UNIQUE
+CREATE CONSTRAINT product_id IF NOT EXISTS
+FOR (p:Product) REQUIRE p.product_id is UNIQUE;
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS 
+FOR (c:Customer) REQUIRE c.customerid is UNIQUE
+
+CREATE CONSTRAINT product_id IF NOT EXISTS
+FOR (p:Product) REQUIRE p.product_id is UNIQUE;
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS 
+FOR (c:Customer) REQUIRE c.customerid is UNIQUE
+
+CREATE CONSTRAINT product_id IF NOT EXISTS
+FOR (p.Product) REQUIRE p.product_id is UNIQUE;
+
+CREATE CONSTRAINT customer_id IF NOT EXISTS;
+
+Match (n) DETACH DELETE n;
+
+:guide https://guides.neo4j.com/sandbox/blank-sandbox/index.html
